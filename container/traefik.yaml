@@ -1,0 +1,36 @@
+http:
+  routers:
+    api:
+      rule: "Host(`traefik.example.ru`)" #address_dashboard
+      entrypoints:
+        - ssl
+      service: api@internal
+      middlewares:
+        - basic-auth
+      tls:
+        certResolver: le
+    ha:
+      rule: "Host(`test.exaple.ru`)" #address_another_service
+      entrypoints:
+        - ssl
+      service: ha-fazenda #exaple_service
+      tls:
+        certResolver: le
+
+  services:
+    ha-fazenda:
+      loadBalancer:
+        passHostHeader: false
+        serversTransport: insecureTransport
+        servers:
+          - url: "https://192.168.62.5:8123" #ip_address_example_service
+
+  serversTransports:
+   insecureTransport:
+     insecureSkipVerify: true
+
+  middlewares:
+    basic-auth:
+      basicAuth:
+        users:
+          - "user:$a5s$jPR7Wt0F$RaheroQKPM9auCWchs6iD/" #login+hash_password(htpasswd -nb user 'password')
