@@ -1,3 +1,10 @@
+/container mounts
+add dst=/traefik.d.conf name=traefik.d.conf src=/traefik.d.conf
+/container
+add envlist=traefik interface=veth1 logging=yes mounts=traefik.d.conf root-dir=traefik start-on-boot=yes
+/container config
+set registry-url=https://registry-1.docker.io tmpdir=tmp
+
 /container envs
 add key=TRAEFIK_API name=traefik value=true
 add key=TRAEFIK_API_DASHBOARD name=traefik value=true
